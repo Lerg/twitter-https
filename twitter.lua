@@ -19,56 +19,56 @@ _M.postMessage = ''
 _M.delegate = ''
 
 local function responseToTable(str, delimeters)
-	local obj = {}
+    local obj = {}
 
-	while str:find(delimeters[1]) ~= nil do
-		if #delimeters > 1 then
-			local key_index = 1
-			local val_index = str:find(delimeters[1])
-			local key = str:sub(key_index, val_index - 1)
-	
-			str = str:sub((val_index + delimeters[1]:len()))
-	
-			local end_index
-			local value
-	
-			if str:find(delimeters[2]) == nil then
-				end_index = str:len()
-				value = str
-			else
-				end_index = str:find(delimeters[2])
-				value = str:sub(1, (end_index - 1))
-				str = str:sub((end_index + delimeters[2]:len()), str:len())
-			end
-			obj[key] = value
-		else
-	
-			local val_index = str:find(delimeters[1])
-			str = str:sub((val_index + delimeters[1]:len()))
-	
-			local end_index
-			local value
-	
-			if str:find(delimeters[1]) == nil then
-				end_index = str:len()
-				value = str
-			else
-				end_index = str:find(delimeters[1])
-				value = str:sub(1, (end_index - 1))
-				str = str:sub(end_index, str:len())
-			end
-			
-			obj[#obj + 1] = value
-		end
-	end
-	
-	return obj
+    while str:find(delimeters[1]) ~= nil do
+        if #delimeters > 1 then
+            local key_index = 1
+            local val_index = str:find(delimeters[1])
+            local key = str:sub(key_index, val_index - 1)
+    
+            str = str:sub((val_index + delimeters[1]:len()))
+    
+            local end_index
+            local value
+    
+            if str:find(delimeters[2]) == nil then
+                end_index = str:len()
+                value = str
+            else
+                end_index = str:find(delimeters[2])
+                value = str:sub(1, (end_index - 1))
+                str = str:sub((end_index + delimeters[2]:len()), str:len())
+            end
+            obj[key] = value
+        else
+    
+            local val_index = str:find(delimeters[1])
+            str = str:sub((val_index + delimeters[1]:len()))
+    
+            local end_index
+            local value
+    
+            if str:find(delimeters[1]) == nil then
+                end_index = str:len()
+                value = str
+            else
+                end_index = str:find(delimeters[1])
+                value = str:sub(1, (end_index - 1))
+                str = str:sub(end_index, str:len())
+            end
+            
+            obj[#obj + 1] = value
+        end
+    end
+    
+    return obj
 end
 
 function _M.listener(event)
-	local url = event.url
+    local url = event.url
     local self = _M 
-	if url:find(self.webURL) then
+    if url:find(self.webURL) then
         if url:find('oauth_token') then
             url = url:sub(url:find('?') + 1, url:len())
             local authorize_response = responseToTable(url, {'=', '&'})
@@ -101,7 +101,7 @@ function _M.listener(event)
         end
         native.cancelWebPopup()
         return false
-	end
+    end
     return true
 end
 
@@ -156,14 +156,14 @@ end
 
 function _M:tweet(del, msg)
     self.action = 'tweet'
-	self.postMessage = msg
-	self.delegate = del
-	
-	if not self.access_token then
+    self.postMessage = msg
+    self.delegate = del
+    
+    if not self.access_token then
         self:apiLogin()
-	else
-		self:apiTweet()
-	end
+    else
+        self:apiTweet()
+    end
 end
 
 function _M:apiGetFollowers()
@@ -192,9 +192,9 @@ function _M:getFollowers(del)
     self.delegate = del
     if not self.access_token then
         self:apiLogin()
-	else
-		self:apiGetFollowers()
-	end
+    else
+        self:apiGetFollowers()
+    end
 end
 
 function _M.getPhotoUrl(id)
