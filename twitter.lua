@@ -124,6 +124,10 @@ function _M:apiLogin()
                     return
                 end
                 -- Full screen WebView
+                local _T = display.screenOriginY -- Top
+                local _L = display.screenOriginX -- Left
+                local _R = display.viewableContentWidth - _L -- Right
+                local _B = display.viewableContentHeight - _T-- Bottom
                 native.showWebPopup(_L, _T, _R - _L, _B - _T, 'https://api.twitter.com/oauth/authorize?oauth_token=' .. twitter_request_token, {urlRequest = _M.listener})
              else
                  print('Twitter getRequestToken Error')
