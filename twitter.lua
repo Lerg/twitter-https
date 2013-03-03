@@ -2,9 +2,9 @@ local _M = {}
 
 local oAuth = require('oauth')
 
-_M.consumer_key = 'your key here'
-_M.consumer_secret = 'your secret here'
-_M.webURL = 'your web site callback url here'
+_M.consumer_key = 'your key'
+_M.consumer_secret = 'your secret'
+_M.webURL = 'your callback url'
 
 _M.twitter_request_token_secret = nil
 
@@ -113,7 +113,7 @@ function _M:apiLogin()
         return
     end
 
-    oAuth.getRequestToken(self.consumer_key, self.webURL, 'https://twitter.com/oauth/request_token', self.consumer_secret, function (event)
+    local twitter_request = oAuth.getRequestToken(self.consumer_key, self.webURL, 'https://twitter.com/oauth/request_token', self.consumer_secret, function (event)
             if not event.isError then
                 local twitter_request_token = event.token
                 self.twitter_request_token_secret = event.token_secret
@@ -129,21 +129,21 @@ function _M:apiLogin()
                 local _R = display.viewableContentWidth - _L -- Right
                 local _B = display.viewableContentHeight - _T-- Bottom
                 native.showWebPopup(_L, _T, _R - _L, _B - _T, 'https://api.twitter.com/oauth/authorize?oauth_token=' .. twitter_request_token, {urlRequest = _M.listener})
-             else
+            else
                  print('Twitter getRequestToken Error')
                  if type(self.delegate.twitterFailed) == 'function' then
                     self.delegate.twitterFailed()
-                 end
-             end
+                end
+            end
         end)
 end
 
 function _M:apiTweet()
-    local params = {
+    local params = {{
         key = 'status',
-        value = self.postMessage}
+        value = self.postMessage}}
     
-    oAuth.makeRequest('https://api.twitter.com/1/statuses/update.json',
+    oAuth.makeRequest('https://api.twitter.com/1.1/statuses/update.json',
         params, self.consumer_key, self.access_token, self.consumer_secret, self.access_token_secret, 'POST', function (event)
             if not event.isError then
                 if type(self.delegate.twitterSuccess) == 'function' then
@@ -171,10 +171,10 @@ function _M:tweet(del, msg)
 end
 
 function _M:apiGetFollowers()
-    local params = {
+    local params = {{
         user_id = self.user_id,
         skip_status = true,
-        include_user_entities = false}
+        include_user_entities = false}}
     
     oAuth.makeRequest('https://api.twitter.com/1.1/followers/list.json',
         params, self.consumer_key, self.access_token, self.consumer_secret, self.access_token_secret, 'GET', function (event)
@@ -183,7 +183,7 @@ function _M:apiGetFollowers()
                     self.delegate.twitterSuccess(event.response)
                 end
              else
-                 print('Twitter Tweet Error')
+                 print('Twitter Get Followers Error')
                  if type(self.delegate.twitterFailed) == 'function' then
                     self.delegate.twitterFailed()
                  end

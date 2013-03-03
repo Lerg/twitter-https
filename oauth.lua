@@ -63,7 +63,7 @@ local function oAuthSign(url, method, args, consumer_secret)
     local query_string = query_string_except_signature .. '&oauth_signature=' .. encode_parameter(hmac_b64)
  
     if method == 'GET' then
-       return url .. '?' .. query_string
+        return url .. '?' .. query_string
     else
         return query_string
     end
@@ -122,7 +122,6 @@ function _M.makeRequest(url, body, consumer_key, token, consumer_secret, token_s
         post_data[body[i].key] = body[i].value
     end
     local post_data = oAuthSign(url, method, post_data, consumer_secret)
-    local result
     if method == 'POST' then
         _M.rawPostRequest(url, post_data, callback)
     else
